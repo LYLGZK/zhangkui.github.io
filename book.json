@@ -1,0 +1,24 @@
+{
+    // 样式风格配置格式
+    "styles": {
+        "website": "styles/website.css",
+        "ebook": "styles/ebook.css",
+        "pdf": "styles/pdf.css",
+        "mobi": "styles/mobi.css",
+        "epub": "styles/epub.css"
+     },
+    // 插件安装配置格式
+    "plugins": [
+      "emphasize",     // 为文字加上底色
+      "-highlight",   // 加了减号的表示禁用一些默认的配置，这里禁用了高亮
+      "tbfed-pagefooter" // 为页面添加页脚
+      ],
+    // 插件对应的配置
+    "pluginsConfig": {
+        "tbfed-pagefooter": {
+        "copyright":"Copyright",
+        "modify_label": "该文件修订时间：",
+        "modify_format": "YYYY-MM-DD HH:mm:ss"
+       }
+     }
+}
