@@ -14,7 +14,7 @@ require([
         var that = this;
         var d = $.Deferred();
 
-        $.getJSON(gitbook.state.basePath+'/search_index.json')
+        $.getJSON(gitbook.state.basePath+'/search_index.jsonTest')
         .then(function(data) {
             // eslint-disable-next-line no-undef
             that.index = lunr.Index.load(data.index);
