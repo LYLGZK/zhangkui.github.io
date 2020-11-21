@@ -4,7 +4,20 @@
 
 ## 1 如何解析yaml文件
 采用viper进行解析，使用flag进行文件的带入。
-### 1.1 加载流程
+### 1.1 定义全局变量
+在导入global包的时候，定义了一些全局变量，这些是之后做业务开发需要的。这些只要使用import引入的时候就执行了。
+~~~go
+var (
+	GVA_DB     *gorm.DB
+	GVA_REDIS  *redis.Client
+	GVA_CONFIG config.Server
+	GVA_VP     *viper.Viper
+	//GVA_LOG    *oplogging.Logger
+	GVA_LOG    *zap.Logger
+)
+~~~
+
+### 1.2 加载流程
 
 * 首先使用flag读取命令行参数。如果没有使用命令行参数，就看是否使用了环境变量，如果没有使用环境变量，就使用默认的配置文件。如果有命令行参数就直接使用命令行参数的文件路径。
 ~~~go
@@ -52,7 +65,31 @@ v := viper.New()
 ~~~
 
 ~~~go
-//rawVal 是struct的结构体
+//rawVal 是struct的结构体s
+var (
+	GVA_DB     *gorm.DB
+	GVA_REDIS  *redis.Client
+	GVA_CONFIG config.Server
+	GVA_VP     *viper.Viper
+	//GVA_LOG    *oplogging.Logger
+	GVA_LOG    *zap.Logger
+)
+
+type Server struct {
+	JWT     JWT     `mapstructure:"jwt" jsonTest:"jwt" yaml:"jwt"`
+	Zap     Zap     `mapstructure:"zap" jsonTest:"zap" yaml:"zap"`
+	Redis   Redis   `mapstructure:"redis" jsonTest:"redis" yaml:"redis"`
+	Email   Email   `mapstructure:"email" jsonTest:"email" yaml:"email"`
+	Casbin  Casbin  `mapstructure:"casbin" jsonTest:"casbin" yaml:"casbin"`
+	System  System  `mapstructure:"system" jsonTest:"system" yaml:"system"`
+	Captcha Captcha `mapstructure:"captcha" jsonTest:"captcha" yaml:"captcha"`
+	// gorm
+	Mysql      Mysql      `mapstructure:"mysql" jsonTest:"mysql" yaml:"mysql"`
+	// oss
+	Local Local `mapstructure:"local" jsonTest:"local" yaml:"local"`
+	Qiniu Qiniu `mapstructure:"qiniu" jsonTest:"qiniu" yaml:"qiniu"`
+}
+//其中JWT、Redis和config.yaml都是最外层一一对应
 func (v *Viper) Unmarshal(rawVal interface{}, opts ...DecoderConfigOption) error {
 	err := decode(v.AllSettings(), defaultDecoderConfig(rawVal, opts...))
 
@@ -63,8 +100,10 @@ func (v *Viper) Unmarshal(rawVal interface{}, opts ...DecoderConfigOption) error
 	return nil
 }
 ~~~
-
 参考[viper的使用](./viper使用.md)
+
+### 1.2 
+
 
 
 
