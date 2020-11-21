@@ -1,0 +1,70 @@
+# 一、配置文件加载
+
+这个项目采用的配置文件是yaml格式的，这个格式是比较流行的一种格式，比json和xml更加小。
+
+## 1 如何解析yaml文件
+采用viper进行解析，使用flag进行文件的带入。
+### 1.1 加载流程
+
+* 首先使用flag读取命令行参数。如果没有使用命令行参数，就看是否使用了环境变量，如果没有使用环境变量，就使用默认的配置文件。如果有命令行参数就直接使用命令行参数的文件路径。
+~~~go
+var config string
+	if len(path) == 0 {
+		flag.StringVar(&config, "c", "", "choose config file.")
+		flag.Parse()
+		if config == "" { // 优先级: 命令行 > 环境变量 > 默认值
+			if configEnv := os.Getenv(utils.ConfigEnv); configEnv == "" {
+				config = utils.ConfigFile
+				fmt.Printf("您正在使用config的默认值,config的路径为%v\n", utils.ConfigFile)
+			} else {
+				config = configEnv
+				fmt.Printf("您正在使用GVA_CONFIG环境变量,config的路径为%v\n", config)
+			}
+		} else {
+			fmt.Printf("您正在使用命令行的-c参数传递的值,config的路径为%v\n", config)
+		}
+	} else {
+		config = path[0]
+		fmt.Printf("您正在使用func Viper()传递的值,config的路径为%v\n", config)
+	}
+~~~
+
+* 第二步是使用viper进行yaml文件的解析。viper可以将yaml解析成map，也可以直接解析成struct，解析struct是采用了mapstructure标签进行的解析
+~~~go
+v := viper.New()
+	v.SetConfigFile(config)
+	err := v.ReadInConfig() //读完之后是一个map类型的
+	if err != nil {
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+	v.WatchConfig()
+
+	v.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("config file changed:", e.Name)
+		if err := v.Unmarshal(&global.GVA_CONFIG); err != nil {
+			fmt.Println(err)
+		}
+	})
+	//这个方法底层就是mapstructure.Decode 将map解析成struct
+	if err := v.Unmarshal(&global.GVA_CONFIG); err != nil {
+		fmt.Println(err)
+	}
+~~~
+
+~~~go
+//rawVal 是struct的结构体
+func (v *Viper) Unmarshal(rawVal interface{}, opts ...DecoderConfigOption) error {
+	err := decode(v.AllSettings(), defaultDecoderConfig(rawVal, opts...))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+~~~
+
+参考[viper的使用](./viper使用.md)
+
+
+
