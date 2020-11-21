@@ -102,7 +102,45 @@ func (v *Viper) Unmarshal(rawVal interface{}, opts ...DecoderConfigOption) error
 ~~~
 参考[viper的使用](./viper使用.md)
 
-### 1.2 
+### 1.3 初始化zap日志库
+初始化之后放入全局变量，以便后续使用。
+~~~go
+func Zap() (logger *zap.Logger) {
+	if ok, _ := utils.PathExists(global.GVA_CONFIG.Zap.Director); !ok { // 判断是否有Director文件夹
+		fmt.Printf("create %v directory\n", global.GVA_CONFIG.Zap.Director)
+		_ = os.Mkdir(global.GVA_CONFIG.Zap.Director, os.ModePerm)
+	}
+
+	switch global.GVA_CONFIG.Zap.Level { // 初始化配置文件的Level
+	case "debug":
+		level = zap.DebugLevel
+	case "info":
+		level = zap.InfoLevel
+	case "warn":
+		level = zap.WarnLevel
+	case "error":
+		level = zap.ErrorLevel
+	case "dpanic":
+		level = zap.DPanicLevel
+	case "panic":
+		level = zap.PanicLevel
+	case "fatal":
+		level = zap.FatalLevel
+	default:
+		level = zap.InfoLevel
+	}
+
+	if level == zap.DebugLevel || level == zap.ErrorLevel {
+		logger = zap.New(getEncoderCore(), zap.AddStacktrace(level))
+	} else {
+		logger = zap.New(getEncoderCore())
+	}
+	if global.GVA_CONFIG.Zap.ShowLine {
+		logger = logger.WithOptions(zap.AddCaller())
+	}
+	return logger
+}
+~~~
 
 
 
