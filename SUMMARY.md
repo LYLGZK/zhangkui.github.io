@@ -1,5 +1,4 @@
 # Summary
 
-* [Introduction](README.md)
-* [Makefile的使用](Makefile的使用.md)
-* [Go逃逸分析](Go逃逸分析.md)
+* [Go逃逸分析](./go/go的逃逸分析.md)
+* [Go每日一库-viper的使用](./go/viper使用.md)

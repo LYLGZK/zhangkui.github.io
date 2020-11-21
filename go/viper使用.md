@@ -1,7 +1,7 @@
 
 * 读取yaml类型配置文件
-~~~go
 
+```go
 type Mysql struct {
 	Port int `json:"port" mapstructure:"port"`
 	Host string `json:"host" mapstructure:"host"`
@@ -32,12 +32,12 @@ func testConfigYaml()  {
 		panic("error1")
 	}
 	fmt.Printf("%v",server.Mysql)
-}
+}  
+```
 
-}
-~~~
 * 读取ini类型的config
-~~~go
+
+```go
 func testConfigIni()  {
 	config := "config.ini"
 
@@ -53,8 +53,7 @@ func testConfigIni()  {
 	fmt.Println(v.GetString("default.mysql_address"))
 
 }
-
-~~~
+```
 
 #### 参考文献
 * https://www.liwenzhou.com/posts/Go/viper_tutorial/
