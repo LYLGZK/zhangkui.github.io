@@ -9,3 +9,6 @@
 * [zap的使用](go/每日一库/zap.md)
 
 * [gin-vue-admin启动流程](go/gin-vue-admin/启动流程.md)
+
+
+* [nginx的反向代理~proxy_set_header](./nginx/nginx反向代理proxy_set_header参数.md)
