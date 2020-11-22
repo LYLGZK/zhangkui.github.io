@@ -9,7 +9,8 @@
     "plugins": [
       "emphasize",     
       "-highlight",   
-      "tbfed-pagefooter" 
+      "tbfed-pagefooter",
+      "toggle-chapters" 
       ],
     "pluginsConfig": {
         "tbfed-pagefooter": {
